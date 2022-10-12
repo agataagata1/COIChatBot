@@ -150,36 +150,37 @@
       hasSentMessage = true;
     }
 
-    
-
-
-  		    window.watsonAssistantChatOptions = {
-    			integrationID: "0899341f-b284-45ef-8688-94ecb624baaf", // The ID of this integration.
-    			region: "us-south", // The region your integration is hosted in.
-    			serviceInstanceID: "e21ce5be-89a7-43c6-8994-196a33b2239e", // The ID of your service instance.
+        window.watsonAssistantChatOptions = {
+            integrationID: "0899341f-b284-45ef-8688-94ecb624baaf", // The ID of this integration.
+            region: "us-south", // The region your integration is hosted in.
+            serviceInstanceID: "e21ce5be-89a7-43c6-8994-196a33b2239e", // The ID of your service instance.
+            showCloseAndRestartButton: true,
+        
+        onLoad: function(instance) { 
+            webChatInstance = instance;
+            // https://github.com/watson-developer-cloud/assistant-web-chat/blob/main/languages/en.json
+            const customLanguagePack = {
+            "input_placeholder": "Napisz wiadomość...",
+            "launcher_closeButton": "Zamknij",
+            "sessionHistory_expired": "Sesja jest nieaktywna. Wyślij wiadomość aby kontynuować. Odswieżenie strony wystartuje nową konwersację.",
+            "closeAndRestartModal_title": "Zakończ rozmowę",
+            "closeAndRestartModal_message": "Czy chcesz zakończyć rozmowę z Wirtualnym asystentem?",
+            "closeAndRestartModal_confirm": "Tak",
+            "closeAndRestartModal_cancel": "Nie",
+                };
+            instance.updateLanguagePack(customLanguagePack);
             
-   			onLoad: function(instance) { 
-                webChatInstance = instance;
-                // https://github.com/watson-developer-cloud/assistant-web-chat/blob/main/languages/en.json
-                const customLanguagePack = {
-                "input_placeholder": "Napisz wiadomość...",
-                "launcher_closeButton": "",
-                "sessionHistory_expired": "Sesja jest nieaktywna. Wyślij wiadomość aby kontynuować. Odswieżenie strony wystartuje nową konwersację.",
-                "branding_headline": "<b>IBM Watson®</b>"
-                 };
-                instance.updateLanguagePack(customLanguagePack);
-                
-                instance.on({ type: 'customResponse', handler: customResponseHandler });
+            instance.on({ type: 'customResponse', handler: customResponseHandler });
 
-                // We will need to listen for the "pre:receive" event so we can convert the buttons (options) responses into
-                // custom responses.
-                instance.on({ type: 'pre:receive', handler: preReceiveHandler });
+            // We will need to listen for the "pre:receive" event so we can convert the buttons (options) responses into
+            // custom responses.
+            instance.on({ type: 'pre:receive', handler: preReceiveHandler });
 
-                // Make sure that we disable the buttons each time the user sends a message.
-                instance.on({ type: 'pre:send', handler: preSendHandler });
+            // Make sure that we disable the buttons each time the user sends a message.
+            instance.on({ type: 'pre:send', handler: preSendHandler });
 
-                instance.render(); }
-  			};
+            instance.render(); }
+        };
 		  setTimeout(function(){
 		    const t=document.createElement('script');
 		    t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
