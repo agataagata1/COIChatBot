@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta id="viewport" name="viewport" content="width=device-width">
 
-    <title>TEST 1 - Logowanie za pomocą hasła - Profil zaufany</title>
+    <title>TEST 2 - Logowanie za pomocą hasła - Profil zaufany</title>
     <link rel="stylesheet" href="files/font-awesome.min.css">
         <meta 
             name="description" 
@@ -143,6 +143,28 @@
       });
     }
 
+    function preReceiveHandler(event) {
+      const message = event.data;
+      if (message.output.generic) {
+        message.output.generic.forEach(messageItem => {
+          console.log(messageItem)
+          // Message items that contain buttons have a response type of "option".
+          if (messageItem.response_type === 'option') {
+            if (messageItem.options[0].label === 'Tak') {
+                webChatInstance.updateAssistantInputFieldVisibility(false)
+            }
+            else{
+                webChatInstance.updateAssistantInputFieldVisibility(true)
+            }
+            // This will turn this response into a custom response that will be rendered by our custom response handler.
+            messageItem.response_type = 'user_defined';
+          }
+          else {
+            webChatInstance.updateAssistantInputFieldVisibility(true)
+          }
+        })
+      }
+    }
     /**
      * This handler is called each time a message is sent. We will use this to disable all the buttons from our last
      * response so they can't be clicked again.
